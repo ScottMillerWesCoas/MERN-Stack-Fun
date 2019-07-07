@@ -5,7 +5,7 @@ const secret = config.get('jwtSecret');
 //this is middleware jwt check before protected route
 // so we need to check the request, and also need
 //access to the next param to confirm moving on
-//to next step in routing/express process
+//to next step in routing/express process//
 const authCheck = (req, res, next) => {
 	//get token from header
 	const token = req.header('x-auth-token');
