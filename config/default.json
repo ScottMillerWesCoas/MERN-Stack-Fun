@@ -1,3 +1,4 @@
 {
-	"mongoURI": "mongodb+srv://stmill03:p621925Dash!@devconnector-fdjyv.mongodb.net/test?retryWrites=true&w=majority"
+	"mongoURI": "mongodb+srv://stmill03:p621925Dash!@devconnector-fdjyv.mongodb.net/test?retryWrites=true&w=majority",
+	"jwtSecret": "hiya!"
 }
