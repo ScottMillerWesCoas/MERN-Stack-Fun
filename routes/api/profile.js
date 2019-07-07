@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const secret = config.get('jwtSecret');
 const auth = require('../../middleware/auth');
-
+//
 // @route		GET api/profile/me
 //@desc			Get current user's profile
 //@access		private

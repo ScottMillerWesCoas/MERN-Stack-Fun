@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 //using config npm package to store universal CONSTs
 const config = require('config');
 const dbLink = config.get('mongoURI');
-
+//
 //the below returns a promise.  You could .then, but asnyc await is cleaner and new standard
 
 const connectDB = async () => {

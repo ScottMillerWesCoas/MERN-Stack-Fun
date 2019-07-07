@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 //model is a class of mongoose schema where we pass params, so 'new' required
-
+//
 const ProfileSchema = new mongoose.Schema({
 	//THIS IS WHERE WE LINK PROFILE TO USER BY ID
 	user: {
