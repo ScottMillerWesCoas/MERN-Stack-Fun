@@ -7,7 +7,12 @@ const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const secret = config.get('jwtSecret');
+//Note: head to github/settings/developers and register app to be able to pull data
 const auth = require('../../middleware/auth');
+//for use in pulling user's repos from github
+const request = require('request');
+const githubClientId = config.get('githubClientId');
+const githubClientSecret = config.get('githubClientSecret');
 
 // @route		GET api/profile/me
 //@desc			Get current user's profile
@@ -229,8 +234,8 @@ router.delete('/experience/:experience_id', auth, async (req, res) => {
 	}
 });
 
-//@route		PUT api/profile
-//@desc			Add new experience to profile
+//@route		PUT api/education
+//@desc			Add new education to profile
 //@access		private
 router.put(
 	'/education',
@@ -269,7 +274,9 @@ router.put(
 		}
 	}
 );
-
+//@route		DELETE api/education
+//@desc			delete passed education item from profile
+//@access		private
 router.delete('/education/:education_id', auth, async (req, res) => {
 	const edId = req.params.education_id;
 	if (!edId) return res.status(422).json({ message: 'no education id provided' });
@@ -283,6 +290,34 @@ router.delete('/education/:education_id', auth, async (req, res) => {
 		res.json(profile);
 	} catch (err) {
 		return res.status(422).json({ message: err.message });
+	}
+});
+
+//@route		GET api/github
+//@desc			get user's repos from github
+//@access		Public
+router.get('/github/:username', async (req, res) => {
+	const user = req.params.username;
+
+	try {
+		const options = {
+			uri: `https://api.github.com/users/${user}/repos?per_page=5&sort=created:asc&client_id=${githubClientId}&client_secret=${githubClientSecret}`,
+			method: 'GET',
+			headers: { 'user-agent': 'node.js' }
+		};
+		request(options, (err, response, body) => {
+			if (err) {
+				console.log(err);
+				return response.status(400).json({ message: 'error connecting to github' });
+			}
+			if (response.statusCode != 200) {
+				return response.status(404).json({ message: 'no github profile found for this user' });
+			}
+			return res.json(JSON.parse(body));
+		});
+	} catch (err) {
+		console.error(err);
+		return res.status(500).json({ message: err.message });
 	}
 });
 
