@@ -3,7 +3,6 @@ const gravatar = require('gravatar');
 const router = express.Router();
 //note using bcrpytjs, not bcrypt
 const bcrypt = require('bcryptjs');
-
 //when posting data, always use express-validator
 const { check, validationResult } = require('express-validator');
 const User = require('../../models/User');

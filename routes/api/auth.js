@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const secret = config.get('jwtSecret');
-//
+
 // @route		GET api/users
 //@desc			Test route
 //@access		Public
