@@ -6,10 +6,8 @@ const bcrypt = require('bcryptjs');
 //when posting data, always use express-validator
 const { check, validationResult } = require('express-validator');
 const User = require('../../models/User');
-const jwt = require('jsonwebtoken');
 const config = require('config');
-const secret = config.get('jwtSecret');
-
+const jwtSign = require('./../../middleware/jwtSign');
 //@route		POST api/users
 //@desc			Test route
 //@access		Public
@@ -74,6 +72,8 @@ router.post(
 					//Note: Mongo (incl Mongo Atlas) creates _id which Mongoose uses to create the
 					//abstraction .id so .id is available though it's not listed in Mongo Atlas in user
 
+					//it appears that user.save() both sends the data to the db to be saved but
+					//ALSO returns that same data on successful save WITH an id
 					const payload = {
 						user: {
 							id: user.id
@@ -81,11 +81,12 @@ router.post(
 					};
 
 					//not a promise, so can't use await, 3rd arg is params, 4th is callback
-					jwt.sign(payload, secret, { expiresIn: 360000 }, (err, token) => {
-						if (err) throw err;
-						//res.json auto send status of 200
-						res.json({ token });
-					});
+					jwtSign(payload, res);
+					// jwt.sign(payload, secret, { expiresIn: 360000 }, (err, token) => {
+					// 	if (err) throw err;
+					// 	//res.json auto send status of 200
+					// 	res.json({ token });
+					// });
 
 					//res.status(200).json({ user });
 				}

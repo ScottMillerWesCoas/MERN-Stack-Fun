@@ -4,9 +4,10 @@ const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
 const config = require('config');
-const secret = config.get('jwtSecret');
+//converted from secret to public/private key
+//const secret = config.get('jwtSecret');
+const jwtSign = require('../../middleware/jwtSign');
 
 // @route		GET api/users
 //@desc			Test route
@@ -77,22 +78,8 @@ router.post(
 						}
 					};
 
-					//not a promise, so can't use await, 3rd arg is params, 4th is callback
-					jwt.sign(payload, secret, { expiresIn: 360000 }, (err, token) => {
-						if (err) throw err;
-						//res.json auto send status of 200
-						res.json({ message: 'got in', token: token });
-					});
-
-					//res.status(200).json({ user });
+					jwtSign(payload, res);
 				}
-				//see if user exists - if yes, send error
-
-				//if not, check for user gravatar
-
-				//if not, encrypt password with brcrypt
-
-				//return jsonwebtoken
 			} catch (err) {
 				console.error(err.message);
 				//use res.status(500) when can't connect

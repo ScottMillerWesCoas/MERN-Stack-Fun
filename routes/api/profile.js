@@ -4,9 +4,8 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
-const jwt = require('jsonwebtoken');
+
 const config = require('config');
-const secret = config.get('jwtSecret');
 //Note: head to github/settings/developers and register app to be able to pull data
 const auth = require('../../middleware/auth');
 //for use in pulling user's repos from github
