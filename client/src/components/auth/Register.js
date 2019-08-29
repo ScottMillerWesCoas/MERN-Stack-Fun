@@ -1,12 +1,13 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 //import axios from 'axios';
 import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
 
 //destructuring props here and only using setAlert within it
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
 	//webhooks
 	const [formData, setFormData] = useState({
 		name: '',
@@ -28,6 +29,7 @@ const Register = ({ setAlert }) => {
 		if (password !== password2) {
 			setAlert('Passwords do not match', 'danger', 3000);
 		} else {
+			register({ name, email, password });
 			/*
 			Below is an example request that will be put into a redux action
 			const newUser = {
@@ -55,6 +57,11 @@ const Register = ({ setAlert }) => {
 		}
 	};
 
+	//Redirect if logged in
+	if (isAuthenticated) {
+		return <Redirect to="/dashboard" />;
+	}
+
 	return (
 		<Fragment>
 			<h1 className="large text-primary">Sign Up</h1>
@@ -63,14 +70,7 @@ const Register = ({ setAlert }) => {
 			</p>
 			<form className="form" onSubmit={e => onSubmit(e)}>
 				<div className="form-group">
-					<input
-						type="text"
-						placeholder="Name"
-						name="name"
-						value={name}
-						onChange={e => onChange(e)}
-						required
-					/>
+					<input type="text" placeholder="Name" name="name" value={name} onChange={e => onChange(e)} />
 				</div>
 				<div className="form-group">
 					<input
@@ -89,7 +89,6 @@ const Register = ({ setAlert }) => {
 						type="password"
 						placeholder="Password"
 						name="password"
-						minLength="6"
 						value={password}
 						onChange={e => onChange(e)}
 					/>
@@ -114,11 +113,17 @@ const Register = ({ setAlert }) => {
 };
 
 Register.propTypes = {
-	setAlert: PropTypes.func.isRequired
+	setAlert: PropTypes.func.isRequired,
+	register: PropTypes.func.isRequired,
+	isAuthenticated: PropTypes.bool
 };
+
+const mapStateToProps = state => ({
+	isAuthenticated: state.auth.isAuthenticated
+});
 
 //use connect to access redux, pass in state to use, then object with action in first (), in second () component
 export default connect(
-	null,
-	{ setAlert }
+	mapStateToProps,
+	{ setAlert, register }
 )(Register);
